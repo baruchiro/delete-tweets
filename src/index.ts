@@ -36,10 +36,6 @@ const timeout_amount = 5000;
 	const page = await browser.newPage();
 	await page.goto("https://twitter.com/");
 	
-	delay(delay_amount);
-	//click login button
-	await page.click('a[data-testid="loginButton"');
-	
 	//create new log file
 	fs.writeFileSync(log_name, 'Process Started');
 	
