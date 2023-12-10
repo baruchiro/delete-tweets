@@ -40,16 +40,14 @@ for (const arg of process.argv)
 				var arg_delay = Number(process.argv[i+1]);
 				if(arg_delay < 5000)
 					console.log("Lower then 5000ms delay could cause rate limiting!");
-				else
-					delay_amount = arg_delay;
+				delay_amount = arg_delay;
 				break;
 			}
 			case "-timeout" : {
 				var arg_timeout = Number(process.argv[i+1]);
 				if(arg_timeout < 5000)
 					console.log("Lower then 5000ms could cause false positives when checking for page elements!");
-				else
-					timeout_amount = arg_timeout;
+				timeout_amount = arg_timeout;
 				break;
 			}
 		}
@@ -120,7 +118,7 @@ for (const arg of process.argv)
 		if(tweet_index < skipTo)
 			continue;
 		if(isLikes){
-			await page.goto(`https://twitter.com/baruchiro/status/${tweet.tweetId}`);
+			await page.goto(`https://twitter.com/x/status/${tweet.tweetId}`);
 			try{
 				//check for options menu, if it times out we log the error and continue to next instance
 				const options = await page.waitForSelector('article[data-testid="tweet"][tabindex="-1"] div[aria-label=More]', { visible: true, timeout: timeout_amount });
@@ -159,7 +157,7 @@ for (const arg of process.argv)
 			}
 		}
 		else{
-			await page.goto(`https://twitter.com/baruchiro/status/${tweet.id}`);
+			await page.goto(`https://twitter.com/x/status/${tweet.id}`);
 			try{
 				//check for options menu, if it times out we log the error and continue to next instance
 				const options = await page.waitForSelector('article[data-testid="tweet"][tabindex="-1"] div[aria-label=More]', { visible: true, timeout: timeout_amount });
