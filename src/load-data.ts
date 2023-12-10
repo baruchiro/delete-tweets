@@ -3,6 +3,7 @@ declare global {
     YTD: {
       twitter_circle_tweet: TweetsCollection;
       tweets: TweetsCollection;
+	  like: LikesCollection
     };
   }
 }
@@ -16,13 +17,23 @@ type TweetsCollection = {
   }[];
 };
 
+type LikesCollection = {
+  [key: string]: {
+    like: {
+      tweetId: string;
+      expandedUrl: string;
+    };
+  }[];
+};
+
 // @ts-ignore
 global.window = {
   YTD: {
     twitter_circle_tweet: {},
     tweets: {},
+	like:{},
   },
-} as { YTD: { twitter_circle_tweet: any; tweets: any } };
+} as { YTD: { twitter_circle_tweet: any; tweets: any; like: any} };
 
 export const loadData = async (file: string) => {
   await import(file);
@@ -35,6 +46,10 @@ export const loadData = async (file: string) => {
     console.log("Found tweets");
     return extractTweets(global.window.YTD.tweets);
   }
+  if (Object.keys(global.window.YTD.like).length) {
+    console.log("Found likes");
+    return extractLikes(global.window.YTD.like);
+  }
   console.log("No tweets found");
   throw new Error("No tweets found");
 };
@@ -44,6 +59,14 @@ const extractTweets = (tweets: TweetsCollection) => {
     arr.map((obj) => ({
       id: obj.tweet.id,
       isReply: !!obj.tweet.in_reply_to_status_id,
+    }))
+  );
+};
+const extractLikes = (like: LikesCollection) => {
+  return Object.values(like).flatMap((arr) =>
+    arr.map((obj) => ({
+      tweetId: obj.like.tweetId,
+	  expandedUrl: obj.like.expandedUrl,
     }))
   );
 };
