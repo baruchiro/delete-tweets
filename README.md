@@ -27,10 +27,10 @@
 
 | argumensts  |  |
 | ------------- |:-------------:|
-| -debug     			| writes debug information to log file     |
-| -log       			| writes log information to log file     |
-| -exlog      			| writes all information from log and debug to log file     |
-| -nolog      			| forces app to run without making a log file, could be helpful if removing large amounts of tweets/retweets/likes |
-| -skip %number%        | skips up to the index given, good if you had to close the app or it crashed and don't have time to rerun the entire file |
-| -delay %ms%       | the delay used between actions, try not to use below 5000ms as this could cause rate limiting |
-| -timeout %ms%     | the timeout amount used after tweet is loaded (helpful on low bandwidth connections), try not to use below 5000ms as this could cause rate limiting |
+| -d, --debug     			| writes debug information to log file     |
+| -l, --log       			| writes log information to log file     |
+| -e, --exlog      			| writes all information from log and debug to log file     |
+| -n, --nolog      			| forces app to run without making a log file, could be helpful if removing large amounts of tweets/retweets/likes |
+| -s, --skip <number>       | skips up to the index given, good if you had to close the app or it crashed and don't have time to rerun the entire file |
+| -w, --wait <number>       | the delay used between actions, try not to use below 5000ms as this could cause rate limiting |
+| -t, --timeout <number>    | the timeout amount used after tweet is loaded (helpful on low bandwidth connections), try not to use below 5000ms as this could cause rate limiting |

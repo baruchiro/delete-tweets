@@ -5,36 +5,72 @@ import puppeteer from "puppeteer";
 import { loadData } from "./load-data";
 import { prompt } from "./utils/terminal";
 
+
+var fileValue;
+
+
 program
-  .argument("<file>", "the tweets file to load")
-  .option("-d, --debug", "writes debug information to log file")
-  .option("-l, --log", "writes log information to log file", false)
-  .option("-e, --exlog", "writes all information from log and debug to log file", true)
-  .option("-n, --nolog", "forces app to run without making a log file, could be helpful if removing large amounts of tweets/retweets/likes")
-  .option(
-    "-s, --skip <number>",
-    "skips up to the index given, good if you had to close the app or it crashed and don't have time to rerun the entire file",
-    "0"
-  )
-  .option(
-    "-t, --timeout <number>",
-    "the timeout amount used after tweet is loaded (helpful on low bandwidth connections), try not to use below 5000ms as this could cause rate limiting",
-    "5000"
-  )
-  .option("-w, --wait <number>", "the delay used between actions, try not to use below 5000ms as this could cause rate limiting", "5000");
+	.arguments("<file>")
+	//this is here because for some reason it doesn't parse the file properly?
+	.action(function(file) {
+		fileValue = file;
+	})
+	
+	.option("-d, --debug",
+	"writes debug information to log file"
+	)
+	
+	.option("-l, --log",
+	"writes log information to log file",
+	false
+	)
+	
+	.option("-e, --exlog",
+	"writes all information from log and debug to log file",
+	true
+	)
+	
+	.option("-n, --nolog",
+	"forces app to run without making a log file, could be helpful if removing large amounts of tweets/retweets/likes"
+	)
+	
+	.option(
+	"-s, --skip <number>",
+	"skips up to the index given, good if you had to close the app or it crashed and don't have time to rerun the entire file",
+	"0"
+	)
+	
+	.option(
+	"-t, --timeout <number>",
+	"the timeout amount used after tweet is loaded (helpful on low bandwidth connections), try not to use below 5000ms as this could cause rate limiting",
+	"5000"
+	)
+	
+	.option("-w, --wait <number>",
+	"the delay used between actions, try not to use below 5000ms as this could cause rate limiting",
+	"5000");
 
 program.parse();
+
 const options = program.opts();
 const log = options.log;
 const extended_error = options.exlog;
 const skipTo = parseInt(options.skip);
 const timeout_amount = parseInt(options.timeout);
 const delay_amount = parseInt(options.wait);
-
-const jsonFileInput = path.resolve(process.cwd(), options.file);
+const jsonFileInput = path.resolve(process.cwd(), fileValue /*options.file*/);//again not sure if broken or just something wrong with my install
 const log_name = Date.now() + "_log.txt";
 
 (async () => {
+  
+
+  //create new log file
+	if (log || extended_error){
+		fs.writeFileSync(log_name, "Process Started");
+		fs.appendFileSync(log_name, "\n" + process.argv);
+	}
+  
+  
   var tweets;
   var isLikes;
 
@@ -52,9 +88,6 @@ const log_name = Date.now() + "_log.txt";
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   await page.goto("https://twitter.com/");
-
-  //create new log file
-  if (log || extended_error) fs.writeFileSync(log_name, "Process Started");
 
   //wait for interaction
   await prompt("Login and press enter to continue...");
