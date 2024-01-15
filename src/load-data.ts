@@ -3,7 +3,7 @@ declare global {
     YTD: {
       twitter_circle_tweet: TweetsCollection;
       tweets: TweetsCollection;
-	  like: LikesCollection
+      like: LikesCollection;
     };
   }
 }
@@ -26,14 +26,14 @@ type LikesCollection = {
   }[];
 };
 
-// @ts-ignore
+// @ts-expect-error - We don't care about the window object
 global.window = {
   YTD: {
     twitter_circle_tweet: {},
     tweets: {},
-	like:{},
+    like: {},
   },
-} as { YTD: { twitter_circle_tweet: any; tweets: any; like: any} };
+} as Window;
 
 export const loadData = async (file: string) => {
   await import(file);
@@ -59,14 +59,22 @@ const extractTweets = (tweets: TweetsCollection) => {
     arr.map((obj) => ({
       id: obj.tweet.id,
       isReply: !!obj.tweet.in_reply_to_status_id,
-    }))
+    })),
   );
 };
 const extractLikes = (like: LikesCollection) => {
   return Object.values(like).flatMap((arr) =>
     arr.map((obj) => ({
       tweetId: obj.like.tweetId,
-	  expandedUrl: obj.like.expandedUrl,
-    }))
+      expandedUrl: obj.like.expandedUrl,
+    })),
+  );
+};
+const extractLikes = (like: LikesCollection) => {
+  return Object.values(like).flatMap((arr) =>
+    arr.map((obj) => ({
+      tweetId: obj.like.tweetId,
+      expandedUrl: obj.like.expandedUrl,
+    })),
   );
 };

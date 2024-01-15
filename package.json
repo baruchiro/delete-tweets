@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "prepare": "husky install",
-    "lint": "eslint",
+    "lint": "eslint src",
     "lint:fix": "yarn lint --fix"
   },
   "author": "",
