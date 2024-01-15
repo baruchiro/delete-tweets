@@ -3,6 +3,7 @@ declare global {
     YTD: {
       twitter_circle_tweet: TweetsCollection;
       tweets: TweetsCollection;
+      like: LikesCollection;
     };
   }
 }
@@ -16,11 +17,21 @@ type TweetsCollection = {
   }[];
 };
 
+type LikesCollection = {
+  [key: string]: {
+    like: {
+      tweetId: string;
+      expandedUrl: string;
+    };
+  }[];
+};
+
 // @ts-expect-error - We don't care about the window object
 global.window = {
   YTD: {
     twitter_circle_tweet: {},
     tweets: {},
+    like: {},
   },
 } as Window;
 
@@ -35,6 +46,10 @@ export const loadData = async (file: string) => {
     console.log("Found tweets");
     return extractTweets(global.window.YTD.tweets);
   }
+  if (Object.keys(global.window.YTD.like).length) {
+    console.log("Found likes");
+    return extractLikes(global.window.YTD.like);
+  }
   console.log("No tweets found");
   throw new Error("No tweets found");
 };
@@ -44,6 +59,22 @@ const extractTweets = (tweets: TweetsCollection) => {
     arr.map((obj) => ({
       id: obj.tweet.id,
       isReply: !!obj.tweet.in_reply_to_status_id,
+    })),
+  );
+};
+const extractLikes = (like: LikesCollection) => {
+  return Object.values(like).flatMap((arr) =>
+    arr.map((obj) => ({
+      tweetId: obj.like.tweetId,
+      expandedUrl: obj.like.expandedUrl,
+    })),
+  );
+};
+const extractLikes = (like: LikesCollection) => {
+  return Object.values(like).flatMap((arr) =>
+    arr.map((obj) => ({
+      tweetId: obj.like.tweetId,
+      expandedUrl: obj.like.expandedUrl,
     })),
   );
 };
