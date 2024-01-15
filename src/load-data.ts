@@ -16,13 +16,13 @@ type TweetsCollection = {
   }[];
 };
 
-// @ts-ignore
+// @ts-expect-error - We don't care about the window object
 global.window = {
   YTD: {
     twitter_circle_tweet: {},
     tweets: {},
   },
-} as { YTD: { twitter_circle_tweet: any; tweets: any } };
+} as Window;
 
 export const loadData = async (file: string) => {
   await import(file);
@@ -44,6 +44,6 @@ const extractTweets = (tweets: TweetsCollection) => {
     arr.map((obj) => ({
       id: obj.tweet.id,
       isReply: !!obj.tweet.in_reply_to_status_id,
-    }))
+    })),
   );
 };
